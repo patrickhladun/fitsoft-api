@@ -12,12 +12,16 @@ export const UserSchema = new Schema({
         required: 'Enter a last name'
     },
     email: {
+        type: String,
+        required: 'Enter a last name'
+    },
+    username: {
         type: String
     },
-    company: {
+    password: {
         type: String
     },
-    phone: {
+    userType: {
         type: String
     },
     created_date: {
