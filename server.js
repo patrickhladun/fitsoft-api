@@ -15,7 +15,7 @@ const corsOptions = {
     origin: `http://${HOST}:${PORT}`
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 const db = require('./models/models');
 const Role = db.role;
