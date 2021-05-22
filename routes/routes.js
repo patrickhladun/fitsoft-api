@@ -1,7 +1,10 @@
 import { addNewEvent, getEvent } from '../controllers/eventController';
 import { addUser } from '../controllers/userController';
+const { body } = require('express-validator/check');
+const User = require('../models/user');
 
 const routes = (app) => {
+
     app.route('/event')
         .get(getEvent)
         .post(addNewEvent)

@@ -1,35 +1,88 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-import routes from './routes/routes';
-
+const cors = require('cors');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 dotenv.config();
+
+const authRoutes = require('./routes/auth');
 const app = express();
 const PORT = process.env.PORT;
 
-mongoose.Promise - global.Promise;
+const corsOptions = {
+    origin: 'http://localhost:8080'
+};
+
+app.use(cors(corsOptions));
+
+const db = require('./models/models');
+const Role = db.role;
+
+// app.use(function (req, res, next) {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//     next();
+// });
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use('/auth', authRoutes);
+
+
+// app.use((error, req, res, next) => {
+//     console.log(error);
+//     const status = error.statusCode || 500;
+//     const message = error.message;
+//     const data = error.data;
+//     res.status(status).json({ message: message, data: data });
+// });
+
+app.get('/', (req, res) => {
+    res.json({ message: "Welcome to Fitsoft application." });
+});
+
 mongoose.connect('mongodb://localhost/CRMdb', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    next();
-});
+app.listen(PORT);
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+function initial() {
+    Role.estimatedDocumentCount((err, count) => {
+        if (!err && count === 0) {
+            new Role({
+                name: "user"
+            }).save(err => {
+                if (err) {
+                    console.log("error", err);
+                }
 
-routes(app);
+                console.log("added 'user' to roles collection");
+            });
 
-app.get('/', (req, res) => {
-    res.send(`Yode and express server running on port ${PORT}`);
-});
+            new Role({
+                name: "admin"
+            }).save(err => {
+                if (err) {
+                    console.log("error", err);
+                }
 
-app.listen(PORT, () => {
-    console.log(`Your server is running on port ${PORT}`);
-});
+                console.log("added 'admin' to roles collection");
+            });
+
+            new Role({
+                name: "customer"
+            }).save(err => {
+                if (err) {
+                    console.log("error", err);
+                }
+
+                console.log("added 'customer' to roles collection");
+            });
+        }
+    });
+}
+initial();

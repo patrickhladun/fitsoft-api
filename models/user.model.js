@@ -1,24 +1,19 @@
-import mongoose from 'mongoose';
-
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-export const UserSchema = new Schema({
-    firstName: {
-        type: String,
-        required: 'Enter a first name'
-    },
-    lastName: {
-        type: String,
-        required: 'Enter a last name'
-    },
+const userSchema = new Schema({
     email: {
         type: String,
         required: 'Enter a last name'
     },
-    username: {
+    password: {
+        type: String,
+        required: 'Enter a last name'
+    },
+    firstName: {
         type: String
     },
-    password: {
+    lastName: {
         type: String
     },
     userType: {
@@ -27,5 +22,13 @@ export const UserSchema = new Schema({
     created_date: {
         type: Date,
         default: Date.now
-    }
+    },
+    role: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Role'
+        }
+    ]
 });
+
+module.exports = mongoose.model( 'User', userSchema );
