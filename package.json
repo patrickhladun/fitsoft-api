@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "author": "Patrick Hladun",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon ./index.js --exec babel-node -e js --trace-warnings"
+    "start": "nodemon ./server.js --exec babel-node -e js --trace-warnings"
   },
   "license": "ISC",
   "dependencies": {

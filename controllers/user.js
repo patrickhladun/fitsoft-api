@@ -33,10 +33,6 @@ export const addUser = (req, res, next) => {
            next(err);
         });
 
-
-
-
-
     // let newUser = new User(req.body);
     // newUser.save((err, user) => {
     //     if (err) {
@@ -46,6 +42,21 @@ export const addUser = (req, res, next) => {
     // });
 };
 
+exports.allAccess = (req, res) => {
+    res.status(200).send("Public Content.");
+};
+
+exports.userBoard = (req, res) => {
+    res.status(200).send("User Content.");
+};
+
+exports.adminBoard = (req, res) => {
+    res.status(200).send("Admin Content.");
+};
+
+exports.moderatorBoard = (req, res) => {
+    res.status(200).send("Moderator Content.");
+};
 
 // export const getUser = (req, res) => {
 //     User.find({}, (err, contact) => {

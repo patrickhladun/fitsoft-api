@@ -1,6 +1,10 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const secret = process.env.SECRET;
 
 const db = require('../models/models');
 const User = db.user;
@@ -106,40 +110,90 @@ exports.signup = (req, res, next) => {
 
 };
 
-exports.login = (req, res, next) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    let loadedUser;
-    User.findOne({ email: email })
-        .then(user => {
+// exports.loginBACKUP = (req, res, next) => {
+//     const email = req.body.email;
+//     const password = req.body.password;
+//     let loadedUser;
+//     console.log(req);
+//     User.findOne({ email: email })
+//         .then(user => {
+//             if (!user) {
+//                 const error = new Error('A user with this email could not be found.');
+//                 error.statusCode = 401;
+//                 throw error;
+//             }
+//             loadedUser = user;
+//             return bcrypt.compare(password, user.password);
+//         })
+//         .then(isEqual => {
+//             if (!isEqual) {
+//                 const error = new Error('Wrong password!');
+//                 error.statusCode = 401;
+//                 throw error;
+//             }
+//             const token = jwt.sign(
+//                 {
+//                     email: loadedUser.email,
+//                     userId: loadedUser._id.toString()
+//                 },
+//                 secret,
+//                 { expiresIn: '1h' }
+//             );
+//             res.status(200).json({ token: token, userId: loadedUser._id.toString() });
+//         })
+//         .catch(err => {
+//             if (!err.statusCode) {
+//                 err.statusCode = 500;
+//             }
+//             next(err);
+//         });
+// };
+
+exports.login = (req, res) => {
+
+    console.log(req.body);
+
+    User.findOne({
+        email: req.body.email // I do not have username in user collection saved
+    })
+        .populate("role", "-__v")
+        .exec((err, user) => {
+            if (err) {
+                res.status(500).send({ message: err });
+                return;
+            }
+
             if (!user) {
-                const error = new Error('A user with this email could not be found.');
-                error.statusCode = 401;
-                throw error;
+                return res.status(404).send({ message: "User Not found." });
             }
-            loadedUser = user;
-            return bcrypt.compare(password, user.password);
-        })
-        .then(isEqual => {
-            if (!isEqual) {
-                const error = new Error('Wrong password!');
-                error.statusCode = 401;
-                throw error;
-            }
-            const token = jwt.sign(
-                {
-                    email: loadedUser.email,
-                    userId: loadedUser._id.toString()
-                },
-                'somesupersecretsecret',
-                { expiresIn: '1h' }
+
+            const passwordIsValid = bcrypt.compareSync(
+                req.body.password,
+                user.password
             );
-            res.status(200).json({ token: token, userId: loadedUser._id.toString() });
-        })
-        .catch(err => {
-            if (!err.statusCode) {
-                err.statusCode = 500;
+
+            if (!passwordIsValid) {
+                return res.status(401).send({
+                    accessToken: null,
+                    message: "Invalid Password!"
+                });
             }
-            next(err);
+
+            const token = jwt.sign({ id: user.id }, secret, {
+                expiresIn: 86400 // 24 hours
+            });
+
+            const authorities = [];
+
+            for (let i = 0; i < user.role.length; i++) {
+                authorities.push("ROLE_" + user.role[i].name.toUpperCase());
+            }
+            res.status(200).send({
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: authorities,
+                accessToken: token
+            });
         });
 };

@@ -7,10 +7,12 @@ dotenv.config();
 
 const authRoutes = require('./routes/auth');
 const app = express();
+const DB = process.env.DB;
+const HOST = process.env.HOST;
 const PORT = process.env.PORT;
 
 const corsOptions = {
-    origin: 'http://localhost:8080'
+    origin: `http://${HOST}:${PORT}`
 };
 
 app.use(cors(corsOptions));
@@ -30,7 +32,6 @@ app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
 
-
 // app.use((error, req, res, next) => {
 //     console.log(error);
 //     const status = error.statusCode || 500;
@@ -43,9 +44,17 @@ app.get('/', (req, res) => {
     res.json({ message: "Welcome to Fitsoft application." });
 });
 
-mongoose.connect('mongodb://localhost/CRMdb', {
+mongoose.connect(`mongodb://${HOST}:/${DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
+})
+.then(() => {
+    console.log('Successfully connected to MongoDb');
+    initial();
+})
+.catch(err => {
+    console.error("Connection error", err);
+    process.exit();
 });
 
 app.listen(PORT);
@@ -85,4 +94,3 @@ function initial() {
         }
     });
 }
-initial();
