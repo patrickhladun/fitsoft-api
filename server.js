@@ -9,11 +9,7 @@ const authRoutes = require('./routes/auth');
 const app = express();
 const DB = process.env.DB;
 const HOST = process.env.HOST;
-const PORT = process.env.PORT;
-
-const corsOptions = {
-    origin: `http://${HOST}:${PORT}`
-};
+const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 
@@ -44,7 +40,11 @@ app.get('/', (req, res) => {
     res.json({ message: "Welcome to Fitsoft application." });
 });
 
-mongoose.connect(`mongodb://${HOST}:/${DB}`, {
+
+// const dbURI = `mongodb://${HOST}:/${DB}`;
+const dbURI = `mongodb+srv://fitsoft-cw:Rzj3g0VWR4eKqMAw@fitsoft.e61kn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
+mongoose.connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
