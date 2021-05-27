@@ -1,6 +1,6 @@
 {
   "name": "fitsoft",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "author": "Patrick Hladun",
   "main": "server.js",
