@@ -23,6 +23,12 @@ const userSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    account: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Account'
+        }
+    ],
     role: [
         {
             type: mongoose.Schema.Types.ObjectId,

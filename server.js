@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const authRoutes = require('./routes/auth');
+const programRoutes = require('./routes/program.routes');
+
 const app = express();
 const DB = process.env.DB;
 const HOST = process.env.HOST;
@@ -27,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
+app.use('/api', programRoutes);
 
 // app.use((error, req, res, next) => {
 //     console.log(error);
@@ -40,9 +43,8 @@ app.get('/', (req, res) => {
     res.json({ message: "Welcome to Fitsoft application." });
 });
 
-
-// const dbURI = `mongodb://${HOST}:/${DB}`;
-const dbURI = `mongodb+srv://fitsoft-cw:Rzj3g0VWR4eKqMAw@fitsoft.e61kn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const dbURI = `mongodb://${HOST}:/${DB}`;
+// const dbURI = `mongodb+srv://fitsoft-cw:Rzj3g0VWR4eKqMAw@fitsoft.e61kn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 mongoose.connect(dbURI, {
     useNewUrlParser: true,
