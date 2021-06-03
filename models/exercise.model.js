@@ -8,8 +8,8 @@ const exerciseSchema = new Schema({
     description: {
         type: String
     },
-    category: {
-
+    type: { 
+        type: String
     },
     video: {
         type: String    
@@ -17,9 +17,7 @@ const exerciseSchema = new Schema({
     image: {
         type: String
     },
-    type: { //Strength, 
-
-    }
+    
 });
 
 module.exports = mongoose.model( 'Exercise', exerciseSchema );

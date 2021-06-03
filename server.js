@@ -7,6 +7,7 @@ dotenv.config();
 
 const authRoutes = require('./routes/auth');
 const programRoutes = require('./routes/program.routes');
+const exerciseRoutes = require('./routes/exercise.routes');
 
 const app = express();
 const DB = process.env.DB;
@@ -30,6 +31,7 @@ app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
 app.use('/api', programRoutes);
+app.use('/api', exerciseRoutes);
 
 // app.use((error, req, res, next) => {
 //     console.log(error);
