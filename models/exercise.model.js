@@ -16,8 +16,7 @@ const exerciseSchema = new Schema({
     },
     image: {
         type: String
-    },
-    
+    }
 });
 
 module.exports = mongoose.model( 'Exercise', exerciseSchema );

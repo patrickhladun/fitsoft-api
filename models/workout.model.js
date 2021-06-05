@@ -5,9 +5,15 @@ const workoutSchema = new Schema({
     name: {
         type: String
     },
-    details: {
+    description: {
         type: String
-    }
+    },
+    exercises: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Exercise'
+        }
+    ]
 });
 
 module.exports = mongoose.model( 'Workout', workoutSchema );

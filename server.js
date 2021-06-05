@@ -7,6 +7,7 @@ dotenv.config();
 
 const authRoutes = require('./routes/auth');
 const programRoutes = require('./routes/program.routes');
+const workoutRoutes = require('./routes/workout.routes');
 const exerciseRoutes = require('./routes/exercise.routes');
 
 const app = express();
@@ -19,18 +20,12 @@ app.use(cors());
 const db = require('./models/models');
 const Role = db.role;
 
-// app.use(function (req, res, next) {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-//     next();
-// });
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
 app.use('/api', programRoutes);
+app.use('/api', workoutRoutes);
 app.use('/api', exerciseRoutes);
 
 // app.use((error, req, res, next) => {
