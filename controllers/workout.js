@@ -27,7 +27,7 @@ exports.addWorkout = (req, res, next) => {
     });
 
     workout.save(workout)
-        .then(() => res.send({message: 'Workout was created!'}))
+        .then(() => res.send(workout._id))
         .catch(err => {
             res.status(500).send({ message: err });
             return;

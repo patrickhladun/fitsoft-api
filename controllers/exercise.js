@@ -13,19 +13,7 @@ exports.addExercise = (req, res, next) => {
         throw error;
     }
 
-    const name = req.body.name;
-    const description = req.body.description;
-    const type = req.body.type;
-    const video = req.body.video;
-    const image = req.body.image;
-
-    const exercise = new Exercise({
-        name,
-        description,
-        type,
-        video,
-        image
-    });
+    const exercise = new Exercise(req.body);
 
     exercise.save((err, exercise) => {
         if (err) {
@@ -36,3 +24,28 @@ exports.addExercise = (req, res, next) => {
         res.send({ message: "Exercise was created successfully!" });
     });
 };
+
+exports.updateExercise = (req, res, next) => {
+
+    const exercise = req.body;
+
+    Exercise.findByIdAndUpdate({_id:req.params.id}, exercise)
+        .then(response => res.send(response))
+        .catch(error => {
+            res.status(500).send({ message: err });
+            return;
+        }
+    );
+};
+
+exports.getExercises = (req, res, next) => {
+    Exercise.find({})
+        .then(exercises => res.send(exercises))
+        .catch(error => console.log(error));
+}
+
+exports.deleteExercise = (req, res, next) => {
+    Exercise.findByIdAndRemove({_id:req.params.id})
+        .then(exercise => res.send(exercise))
+        .catch(error => console.log(error));
+}

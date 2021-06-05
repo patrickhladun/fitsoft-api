@@ -10,10 +10,10 @@ const userSchema = new Schema({
         type: String,
         required: 'Enter a last name'
     },
-    firstName: {
+    first_name: {
         type: String
     },
-    lastName: {
+    last_name: {
         type: String
     },
     userType: {

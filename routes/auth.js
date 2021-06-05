@@ -44,4 +44,10 @@ router.post(
     authController.login
 );
 
+router.get(
+  '/isUserAuth',
+  authController.verifyJWT,
+  authController.auth
+);
+
 module.exports = router;

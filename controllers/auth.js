@@ -129,5 +129,30 @@ exports.login = (req, res) => {
                 role: authorities,
                 accessToken: token
             });
+        });   
+};
+
+exports.verifyJWT = (req, res, next) => {
+    const token = req.headers['x-access-token'];
+    // const userId = req.body.userId;
+
+    if (!token) {
+        res.send('You need a valid token!');
+    } else {
+        jwt.verify(token, secret, (err, decoded) => {
+            if(err) {
+                res.json({auth: false, message: 'Authentication failed.'});
+            } else {
+                req.userId = decoded.id;
+                console.log(`Token: ${token}`);
+                console.log(`Secret: ${secret}`);
+                console.log(`Decoded: ${JSON.stringify(decoded)}`);
+                next();
+            }
         });
+    }
+};
+
+exports.auth = (req, res) => {
+    res.send('Authenticated.');
 };
